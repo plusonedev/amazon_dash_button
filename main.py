@@ -1,18 +1,20 @@
 import os, time, requests
+from dotenv import load_dotenv
+load_dotenv()
 
-
-hostname = 'x.x.x.x'
-
-text_numbers = ['+15555555555']
+hostname = os.getenv('HOSTNAME')
+cooldown_timer = int(os.getenv('COOLDOWN'))
+ping_interval = int(os.getenv('PINGINTERVAL'))
+text_numbers = os.getenv('RECIPIENTS').split(',')
 
 def send_text(cell_number):
     
-    end_point = 'https://your-api-endpoint'
+    end_point = os.getenv('ENDPOINT')
     data = {
         "To": cell_number,
-        "From": "+15555555555",
-        "Response": "5555555555",
-        "Body": "OH NO!! Mike is in the server room!!"
+        "From": os.getenv('FROM'),
+        "Response": os.getenv('RESPONSE'),
+        "Body": os.getenv('BODY')
     }
     r = requests.post(end_point, json=data)
 
@@ -22,7 +24,7 @@ while True:
         print("button pressed!")
         for number in text_numbers:
             send_text(number)
-        time.sleep(20)
+        time.sleep(cooldown_timer)
     
     time.sleep(1)
 
